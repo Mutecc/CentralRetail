@@ -56,6 +56,8 @@
             if (is_InAppBrowser()) {
                 const modal = document.getElementById('inAppBrowserModal');
                 const confirmButton = document.getElementById('confirmButton');
+                const copyLinkButton = document.getElementById('copyLinkButton');
+                const copyMessage = document.getElementById('copyMessage');
 
                 // แสดง Modal
                 modal.classList.remove('hidden');
@@ -64,6 +66,18 @@
                     const currentUrl = new URL(window.location.href);
                     currentUrl.searchParams.set('openExternalBrowser', '1');
                     window.location.href = currentUrl.toString();
+                });
+
+                copyLinkButton.addEventListener('click', async () => {
+                    try {
+                        await navigator.clipboard.writeText(web_app_url);
+                        copyMessage.classList.remove('hidden');
+                        setTimeout(() => {
+                            copyMessage.classList.add('hidden');
+                        }, 2000); // ซ่อนข้อความหลังจาก 2 วินาที
+                    } catch (err) {
+                        console.error('Failed to copy text: ', err);
+                    }
                 });
             }
         });
@@ -83,10 +97,16 @@
                 <p class="text-gray-600 mb-6 text-sm">เพื่อประสิทธิภาพสูงสุดในการใช้งาน กรุณาเปิดหน้าเว็บนี้ในเบราว์เซอร์หลัก (เช่น Chrome, Safari) ค่ะ</p>
             </div>
             
-            <div class="flex justify-center mt-auto">
-                <button id="confirmButton" class="px-6 py-2 rounded-lg text-sm font-semibold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75 transition-colors duration-200">
-                    เปิดเบราว์เซอร์
-                </button>
+            <div class="flex flex-col items-center mt-auto">
+                <div class="flex justify-center space-x-4 mb-4">
+                    <button id="confirmButton" class="px-6 py-2 rounded-lg text-sm font-semibold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75 transition-colors duration-200">
+                        เปิดเบราว์เซอร์
+                    </button>
+                    <button id="copyLinkButton" class="px-6 py-2 rounded-lg text-sm font-semibold text-gray-800 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 transition-colors duration-200">
+                        คัดลอกลิงก์
+                    </button>
+                </div>
+                <span id="copyMessage" class="text-green-600 text-sm font-medium hidden">คัดลอกแล้ว!</span>
             </div>
         </div>
     </div>
