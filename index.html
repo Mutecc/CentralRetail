@@ -59,18 +59,21 @@
                 const copyLinkButton = document.getElementById('copyLinkButton');
                 const copyMessage = document.getElementById('copyMessage');
 
+                // สร้าง URL ที่มีพารามิเตอร์ openExternalBrowser สำหรับการเปิดเบราว์เซอร์หลัก
+                const urlToRedirect = new URL(window.location.href);
+                urlToRedirect.searchParams.set('openExternalBrowser', '1');
+
                 // แสดง Modal
                 modal.classList.remove('hidden');
                 
                 confirmButton.addEventListener('click', () => {
-                    const currentUrl = new URL(window.location.href);
-                    currentUrl.searchParams.set('openExternalBrowser', '1');
-                    window.location.href = currentUrl.toString();
+                    window.location.href = urlToRedirect.toString();
                 });
 
                 copyLinkButton.addEventListener('click', async () => {
                     try {
-                        await navigator.clipboard.writeText(web_app_url);
+                        // คัดลอก URL ที่มีพารามิเตอร์
+                        await navigator.clipboard.writeText(urlToRedirect.toString());
                         copyMessage.classList.remove('hidden');
                         setTimeout(() => {
                             copyMessage.classList.add('hidden');
